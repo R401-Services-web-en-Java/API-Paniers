@@ -7,11 +7,11 @@ import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class BasketManagementRepositoryPostgresql implements BasketManagementRepositoryInterface, Closeable {
+public class BasketManagementRepositoryMariadb implements BasketManagementRepositoryInterface, Closeable {
     protected Connection dbConnection ;
 
-    public BasketManagementRepositoryPostgresql(String infoConnection, String user, String pwd ) throws java.sql.SQLException, java.lang.ClassNotFoundException {
-        //Class.forName("org.postgresql.jdbc.Driver");
+    public BasketManagementRepositoryMariadb(String infoConnection, String user, String pwd ) throws java.sql.SQLException, java.lang.ClassNotFoundException {
+        Class.forName("org.mariadb.jdbc.Driver");
         dbConnection = DriverManager.getConnection( infoConnection, user, pwd ) ;
     }
 
@@ -29,7 +29,7 @@ public class BasketManagementRepositoryPostgresql implements BasketManagementRep
 
         Basket selectedBasket = null;
 
-        String query = "SELECT * FROM Basket WHERE basket_id=?";
+        String query = "SELECT * FROM BASKET WHERE basket_id=?";
 
         // construction et exécution d'une requête préparée
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
@@ -59,7 +59,7 @@ public class BasketManagementRepositoryPostgresql implements BasketManagementRep
     public ArrayList<Basket> getAllBaskets() {
         ArrayList<Basket> listBaskets ;
 
-        String query = "SELECT * FROM Basket";
+        String query = "SELECT * FROM BASKET";
 
         // construction et exécution d'une requête préparée
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
@@ -89,7 +89,7 @@ public class BasketManagementRepositoryPostgresql implements BasketManagementRep
 
     @Override
     public boolean updateBasket(int basket_id, Date confirmation_date, boolean confirmed, String username) {
-        String query = "UPDATE Basket SET confirmation_date=?, confirmed=?, username=?  where basket_id=?";
+        String query = "UPDATE BASKET SET confirmation_date=?, confirmed=?, username=?  where basket_id=?";
         int nbRowModified = 0;
 
         // construction et exécution d'une requête préparée

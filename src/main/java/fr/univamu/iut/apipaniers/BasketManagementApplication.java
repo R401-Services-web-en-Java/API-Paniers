@@ -21,13 +21,13 @@ public class BasketManagementApplication extends Application {
 
     @Produces
     private BasketManagementRepositoryInterface openDbConnection(){
-        BasketManagementRepositoryPostgresql db = null;
+        BasketManagementRepositoryMariadb db = null;
 
         try{
             String infoConnection = "jdbc:postgres://kandula.db.elephantsql.com/nnvkcipr";
             String login = "nnvkcipr";
             String password = "tGQiiPKkLVtIG2b2pKKjV1e1m2U_8KXm";
-            db = new BasketManagementRepositoryPostgresql(infoConnection,login,password);
+            db = new BasketManagementRepositoryMariadb(infoConnection,login,password);
         }
         catch (Exception e){
             System.err.println(e.getMessage());
@@ -46,10 +46,7 @@ public class BasketManagementApplication extends Application {
         BasketService basketService = null ;
         ContentService contentService = null;
         try {
-            String infoConnection = "jdbc:postgres://kandula.db.elephantsql.com/nnvkcipr";
-            String login = "nnvkcipr";
-            String password = "tGQiiPKkLVtIG2b2pKKjV1e1m2U_8KXm";
-            BasketManagementRepositoryPostgresql db = new BasketManagementRepositoryPostgresql(infoConnection,login,password);
+            BasketManagementRepositoryMariadb db = new BasketManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
             basketService = new BasketService(db);
             contentService = new ContentService(db);
         } catch (Exception e) {

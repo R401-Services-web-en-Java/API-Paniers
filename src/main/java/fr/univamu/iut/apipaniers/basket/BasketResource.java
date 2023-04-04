@@ -25,6 +25,7 @@ public class BasketResource {
      * @param BasketRepo objet implémentant l'interface d'accès aux données
      */
     public @Inject BasketResource(BasketManagementRepositoryInterface BasketRepo ){
+        System.out.println("heyyyyyyy");
         this.service = new BasketService( BasketRepo) ;
     }
 
