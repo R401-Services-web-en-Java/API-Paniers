@@ -24,10 +24,7 @@ public class BasketManagementApplication extends Application {
         BasketManagementRepositoryMariadb db = null;
 
         try{
-            String infoConnection = "jdbc:postgres://kandula.db.elephantsql.com/nnvkcipr";
-            String login = "nnvkcipr";
-            String password = "tGQiiPKkLVtIG2b2pKKjV1e1m2U_8KXm";
-            db = new BasketManagementRepositoryMariadb(infoConnection,login,password);
+            db = new BasketManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
         }
         catch (Exception e){
             System.err.println(e.getMessage());
