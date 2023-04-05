@@ -188,4 +188,64 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
     }
 
 
+    @Override
+    public void addBasket(Basket basket) {
+        String query = "INSERT INTO BASKET (basket_id, confirmation_date, confirmed, username) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, basket.getBasket_id());
+            ps.setDate(2, basket.getConfirmation_date());
+            ps.setBoolean(3, basket.isConfirmed());
+            ps.setString(4, basket.getUsername());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteBasket(int basket_id) {
+        String query = "DELETE FROM BASKET WHERE basket_id = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, basket_id);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addContent(Content content) {
+        //    public Content(int basket_id, String product_name, int quantity) {
+        String query = "INSERT INTO CONTENT (basket_id, product_name, quantity) VALUES (?, ?, ?)";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, content.getBasket_id());
+            ps.setString(2, content.getProduct_name());
+            ps.setInt(3, content.getQuantity());
+
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteContent(int basket_id,String product_name) {
+        String query = "DELETE FROM BASKET WHERE basket_id = ? AND product_name = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, basket_id);
+            ps.setString(2,product_name);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

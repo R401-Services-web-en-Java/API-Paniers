@@ -5,6 +5,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.net.URI;
 
 @Path("/baskets")
 @ApplicationScoped
@@ -25,7 +28,6 @@ public class BasketResource {
      * @param BasketRepo objet implémentant l'interface d'accès aux données
      */
     public @Inject BasketResource(BasketManagementRepositoryInterface BasketRepo ){
-        System.out.println("heyyyyyyy");
         this.service = new BasketService( BasketRepo) ;
     }
 
@@ -61,15 +63,40 @@ public class BasketResource {
         return result;
     }
 
+    @POST
+    @Consumes("application/json")
+    public Response addBasket(String basketJson){
+        try {
+            Basket basket = new ObjectMapper().readValue(basketJson, Basket.class);
+
+            service.addBasket(basket);
+
+            URI location = new URI("/baskets/" + basket.getBasket_id());
+            return Response.created(location).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    @DELETE
+    @Path("{basket_id}")
+    public Response deleteBasket(@PathParam("basket_id") int basket_id){
+        service.deleteBasket(basket_id);
+        return Response.noContent().build();
+    }
     @PUT
     @Path("{basket_id}")
     @Consumes("application/json")
-    public Response updateBasket(@PathParam("basket_id") int basket_id, Basket Basket ){
+    public Response updateBasket(@PathParam("basket_id") int basket_id, String basketJson ){
+        try {
+            Basket basket = new ObjectMapper().readValue(basketJson, Basket.class);
 
-        // si le livre n'a pas été trouvé
-        if( ! service.updateBasket(basket_id, Basket) )
-            throw new NotFoundException();
-        else
-            return Response.ok("updated").build();
+            service.updateBasket(basket_id,basket);
+
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
+
+
 }

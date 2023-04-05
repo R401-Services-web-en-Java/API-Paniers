@@ -3,6 +3,7 @@ package fr.univamu.iut.apipaniers.basket;
 import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.ws.rs.NotFoundException;
 
 import java.util.ArrayList;
 
@@ -65,5 +66,19 @@ public class BasketService {
 
     public boolean updateBasket(int basket_id, Basket Basket) {
         return BasketRepo.updateBasket(basket_id, Basket.confirmation_date, Basket.confirmed, Basket.username);
+    }
+
+    public void addBasket(Basket basket) {
+        if (BasketRepo.getBasket(basket.getBasket_id()) != null) {
+            throw new RuntimeException("Basket already exists");
+        }
+        BasketRepo.addBasket(basket);
+    }
+
+    public void deleteBasket(int basket_id) {
+        if (BasketRepo.getBasket(basket_id) == null) {
+            throw new NotFoundException();
+        }
+        BasketRepo.deleteBasket(basket_id);
     }
 }

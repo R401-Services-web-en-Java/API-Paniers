@@ -1,9 +1,12 @@
 package fr.univamu.iut.apipaniers.content;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+
+import java.net.URI;
 
 public class ContentResource {
 
@@ -43,15 +46,39 @@ public class ContentResource {
         return result;
     }
 
+    @POST
+    @Consumes("application/json")
+    public Response addContent(String contentJson){
+        try {
+            Content content = new ObjectMapper().readValue(contentJson, Content.class);
+
+            service.addContent(content);
+
+            URI location = new URI("/contents/" + content.getBasket_id() + content.product_name);
+            return Response.created(location).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    @DELETE
+    @Path("{content_id}/{product_name}")
+    public Response deleteContent(@PathParam("content_id") int content_id,@PathParam("product_name") String product_name){
+        service.deleteContent(content_id,product_name);
+        return Response.noContent().build();
+    }
+
     @PUT
     @Path("{content_id}/{product_name}")
     @Consumes("application/json")
-    public Response updateContent(@PathParam("content_id") int content_id,@PathParam("product_name") String product_name, Content Content ){
+    public Response updateContent(@PathParam("content_id") int content_id,@PathParam("product_name") String product_name, String contentJson ){
+        try {
+            Content content = new ObjectMapper().readValue(contentJson, Content.class);
 
-        // si le livre n'a pas été trouvé
-        if( ! service.updateContent(content_id, product_name, Content) )
-            throw new NotFoundException();
-        else
-            return Response.ok("updated").build();
+            service.updateContent(content_id,product_name,content);
+
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
 }

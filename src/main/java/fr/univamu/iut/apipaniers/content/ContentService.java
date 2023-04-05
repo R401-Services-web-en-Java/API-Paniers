@@ -1,8 +1,10 @@
 package fr.univamu.iut.apipaniers.content;
 
 import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.basket.Basket;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.ws.rs.NotFoundException;
 
 import java.util.ArrayList;
 
@@ -50,5 +52,19 @@ public class ContentService {
 
     public boolean updateContent(int content_id,String product_name, Content Content) {
         return ContentRepo.updateContent(content_id, product_name, Content.quantity);
+    }
+
+    public void addContent(Content content) {
+        if (ContentRepo.getContent(content.getBasket_id(),content.getProduct_name()) != null) {
+            throw new RuntimeException("Content already exists");
+        }
+        ContentRepo.addContent(content);
+    }
+
+    public void deleteContent(int basket_id,String product_name) {
+        if (ContentRepo.getContent(basket_id,product_name) == null) {
+            throw new NotFoundException();
+        }
+        ContentRepo.deleteContent(basket_id,product_name);
     }
 }
