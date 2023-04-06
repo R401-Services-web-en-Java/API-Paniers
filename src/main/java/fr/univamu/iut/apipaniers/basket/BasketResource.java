@@ -10,38 +10,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 
+/**
+ * Resource api class
+ * @acces url/api/baskets
+ */
 @Path("/baskets")
 @ApplicationScoped
 public class BasketResource {
 
-    /**
-     * Service utilisé pour accéder aux données des livres et récupérer/modifier leurs informations
-     */
     private BasketService service;
 
     /**
-     * Constructeur par défaut
+     * Default constructor
      */
     public BasketResource(){}
 
+
     /**
-     * Constructeur permettant d'initialiser le service avec une interface d'accès aux données
-     * @param BasketRepo objet implémentant l'interface d'accès aux données
+     * Constructor to init the service
+     *
+     * @param BasketRepo
+     * @param userRepo
      */
     public @Inject BasketResource(BasketManagementRepositoryInterface BasketRepo, UserRepositoryInterface userRepo ){
         this.service = new BasketService( BasketRepo,userRepo) ;
     }
 
     /**
-     * Constructeur permettant d'initialiser le service d'accès aux livres
+     * @param service
      */
     public BasketResource( BasketService service ){
         this.service = service;
     }
 
     /**
-     * Enpoint permettant de publier de tous les livres enregistrés
-     * @return la liste des livres (avec leurs informations) au format JSON
+     * Get all the baskets from the BD
+     *
+     * @return all the baskets in JSON format
      */
     @GET
     @Produces("application/json")
@@ -50,6 +55,13 @@ public class BasketResource {
     }
 
 
+    /**
+     * Read method from the CRUD of Basket
+     *
+     * @param basket_id
+     * @param username
+     * @return
+     */
     @GET
     @Path("{basket_id}/{username}")
     @Produces("application/json")
@@ -64,6 +76,12 @@ public class BasketResource {
         return result;
     }
 
+    /**
+     * Create method from the CRUD of Basket
+     *
+     * @param basketJson
+     * @return api response
+     */
     @POST
     @Consumes("application/json")
     public Response addBasket(String basketJson){
@@ -78,12 +96,29 @@ public class BasketResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
+
+    /**
+     * Delete method from the CRUD of Basket
+     *
+     * @param basket_id
+     * @param username
+     * @return api response
+     */
     @DELETE
     @Path("{basket_id}/{username}")
     public Response deleteBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username){
         service.deleteBasket(basket_id,username);
         return Response.noContent().build();
     }
+
+    /**
+     * Update method from the CRUD of Basket
+     *
+     * @param basket_id
+     * @param username
+     * @param basketJson
+     * @return api response
+     */
     @PUT
     @Path("{basket_id}/{username}")
     @Consumes("application/json")
@@ -99,6 +134,12 @@ public class BasketResource {
         }
     }
 
+    /**
+     * Get all the baskets of a user
+     *
+     * @param username
+     * @return JSON string with the result
+     */
     @GET
     @Path("{username}")
     @Consumes("application/json")

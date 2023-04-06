@@ -2,6 +2,9 @@ package fr.univamu.iut.apipaniers.basket;
 
 import java.sql.Date;
 
+/**
+ * Basket Class from the DB
+ */
 public class Basket {
     protected int basket_id;
     protected Date confirmation_date;
@@ -11,6 +14,12 @@ public class Basket {
     public Basket() {
     }
 
+    /**
+     * @param basket_id
+     * @param confirmation_date
+     * @param confirmed
+     * @param username
+     */
     public Basket(int basket_id, Date confirmation_date, boolean confirmed, String username) {
         this.basket_id = basket_id;
         this.confirmation_date = confirmation_date;

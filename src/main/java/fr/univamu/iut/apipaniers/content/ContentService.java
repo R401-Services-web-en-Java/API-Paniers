@@ -7,19 +7,27 @@ import jakarta.ws.rs.NotFoundException;
 
 import java.util.ArrayList;
 
+/**
+ * Content service class
+ */
 public class ContentService {
 
     protected ContentManagementRepositoryInterface contentRepo ;
 
+    /**
+     * @param contentRepo
+     */
     public  ContentService( ContentManagementRepositoryInterface contentRepo) {
         this.contentRepo = contentRepo;
     }
 
+    /**
+     * @return all the contents in JSON format
+     */
     public String getAllContentsJSON(){
 
         ArrayList<Content> allContents = contentRepo.getAllContents();
 
-        // création du json et conversion de la liste de livres
         String result = null;
         try( Jsonb jsonb = JsonbBuilder.create()){
             result = jsonb.toJson(allContents);
@@ -31,6 +39,11 @@ public class ContentService {
         return result;
     }
 
+    /**
+     * @param content_id
+     * @param product_name
+     * @return a content in JSON format
+     */
     public String getContentJSON( int content_id, String product_name ){
         String result = null;
         Content myContent = contentRepo.getContent(content_id,product_name);
@@ -47,10 +60,19 @@ public class ContentService {
     }
 
 
+    /**
+     * @param content_id
+     * @param product_name
+     * @param Content
+     * @return if the content has been updated
+     */
     public boolean updateContent(int content_id,String product_name, Content Content) {
         return contentRepo.updateContent(content_id, product_name, Content.quantity);
     }
 
+    /**
+     * @param content
+     */
     public void addContent(Content content) {
         if (contentRepo.getContent(content.getBasket_id(),content.getProduct_name()) != null) {
             throw new RuntimeException("Content already exists");
@@ -58,6 +80,10 @@ public class ContentService {
         contentRepo.addContent(content);
     }
 
+    /**
+     * @param basket_id
+     * @param product_name
+     */
     public void deleteContent(int basket_id,String product_name) {
         if (contentRepo.getContent(basket_id,product_name) == null) {
             throw new NotFoundException();

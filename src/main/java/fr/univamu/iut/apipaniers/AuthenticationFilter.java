@@ -9,6 +9,10 @@ import java.io.IOException;
 
 public class AuthenticationFilter implements ContainerRequestFilter {
 
+    /**
+     * @param requestContext
+     * @throws IOException
+     */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String authHeader = requestContext.getHeaderString("Authorization");
@@ -27,6 +31,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
+    /**
+     * @param token
+     * @throws Exception
+     */
     private void validateToken(String token) throws Exception {
         if (!token.equals("token")) {
             throw new Exception("Invalid token");

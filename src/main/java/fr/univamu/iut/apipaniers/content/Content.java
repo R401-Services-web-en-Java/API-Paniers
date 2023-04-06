@@ -1,13 +1,25 @@
 package fr.univamu.iut.apipaniers.content;
 
+
+/**
+ * Content DB equivalent
+ */
 public class Content {
     protected int basket_id;
     protected String product_name;
     protected int quantity;
 
+    /**
+     * Default constructor
+     */
     public Content() {
     }
 
+    /**
+     * @param basket_id
+     * @param product_name
+     * @param quantity
+     */
     public Content(int basket_id, String product_name, int quantity) {
         this.basket_id = basket_id;
         this.product_name = product_name;
