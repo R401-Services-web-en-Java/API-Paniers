@@ -44,7 +44,7 @@ public class BasketManagementApplication extends Application {
         ContentService contentService = null;
         try {
             BasketManagementRepositoryMariadb db = new BasketManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
-            basketService = new BasketService(db);
+            basketService = new BasketService(db,connectUserApi());
             contentService = new ContentService(db);
         } catch (Exception e) {
             System.err.println(e.getMessage());

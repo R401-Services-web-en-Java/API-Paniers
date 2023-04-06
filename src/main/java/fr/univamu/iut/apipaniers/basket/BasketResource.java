@@ -1,6 +1,7 @@
 package fr.univamu.iut.apipaniers.basket;
 
 import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -27,8 +28,8 @@ public class BasketResource {
      * Constructeur permettant d'initialiser le service avec une interface d'accès aux données
      * @param BasketRepo objet implémentant l'interface d'accès aux données
      */
-    public @Inject BasketResource(BasketManagementRepositoryInterface BasketRepo ){
-        this.service = new BasketService( BasketRepo) ;
+    public @Inject BasketResource(BasketManagementRepositoryInterface BasketRepo, UserRepositoryInterface userRepo ){
+        this.service = new BasketService( BasketRepo,userRepo) ;
     }
 
     /**
@@ -50,11 +51,11 @@ public class BasketResource {
 
 
     @GET
-    @Path("{basket_id}")
+    @Path("{basket_id}/{username}")
     @Produces("application/json")
-    public String getBasket( @PathParam("basket_id") int basket_id){
+    public String getBasket( @PathParam("basket_id") int basket_id, @PathParam("username") String username){
 
-        String result = service.getBasketJSON(basket_id);
+        String result = service.getBasketJSON(basket_id,username);
 
         // si le livre n'a pas été trouvé
         if( result == null )
@@ -78,25 +79,23 @@ public class BasketResource {
         }
     }
     @DELETE
-    @Path("{basket_id}")
-    public Response deleteBasket(@PathParam("basket_id") int basket_id){
-        service.deleteBasket(basket_id);
+    @Path("{basket_id}/{username}")
+    public Response deleteBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username){
+        service.deleteBasket(basket_id,username);
         return Response.noContent().build();
     }
     @PUT
-    @Path("{basket_id}")
+    @Path("{basket_id}/{username}")
     @Consumes("application/json")
-    public Response updateBasket(@PathParam("basket_id") int basket_id, String basketJson ){
+    public Response updateBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username, String basketJson ){
         try {
             Basket basket = new ObjectMapper().readValue(basketJson, Basket.class);
 
-            service.updateBasket(basket_id,basket);
+            service.updateBasket(basket_id,username,basket);
 
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
-
-
 }

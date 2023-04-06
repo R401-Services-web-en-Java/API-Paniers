@@ -25,15 +25,16 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
         }
     }
     @Override
-    public Basket getBasket(int basket_id) {
+    public Basket getBasket(int basket_id, String username) {
 
         Basket selectedBasket = null;
 
-        String query = "SELECT * FROM BASKET WHERE basket_id=?";
+        String query = "SELECT * FROM BASKET WHERE basket_id=? AND username=?";
 
         // construction et exécution d'une requête préparée
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
             ps.setInt(1, basket_id);
+            ps.setString(2, username);
 
             // exécution de la requête
             ResultSet result = ps.executeQuery();
@@ -44,7 +45,6 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
             {
                 Date confirmation_date = result.getDate("confirmation_date");
                 Boolean confirmed = result.getBoolean("confirmed");
-                String username = result.getString("username");
 
                 // création du livre courant
                 Basket currentBasket = new Basket(basket_id, confirmation_date, confirmed,username);
@@ -88,16 +88,16 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
     }
 
     @Override
-    public boolean updateBasket(int basket_id, Date confirmation_date, boolean confirmed, String username) {
-        String query = "UPDATE BASKET SET confirmation_date=?, confirmed=?, username=?  where basket_id=?";
+    public boolean updateBasket(int basket_id, String username, Date confirmation_date, boolean confirmed) {
+        String query = "UPDATE BASKET SET confirmation_date=?, confirmed=? WHERE basket_id=? AND username=?";
         int nbRowModified = 0;
 
         // construction et exécution d'une requête préparée
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
             ps.setDate(1, confirmation_date);
             ps.setBoolean(2, confirmed);
-            ps.setString(3, username );
-            ps.setInt(4, basket_id);
+            ps.setInt(3, basket_id);
+            ps.setString(4, username );
 
             // exécution de la requête
             nbRowModified = ps.executeUpdate();
@@ -205,11 +205,12 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
     }
 
     @Override
-    public void deleteBasket(int basket_id) {
-        String query = "DELETE FROM BASKET WHERE basket_id = ?";
+    public void deleteBasket(int basket_id, String username) {
+        String query = "DELETE FROM BASKET WHERE basket_id = ? AND username=?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, basket_id);
+            ps.setString(2,username);
 
             ps.executeUpdate();
         } catch (SQLException e) {

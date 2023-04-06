@@ -10,15 +10,15 @@ public interface BasketManagementRepositoryInterface {
     //Basket
     public void close();
 
-    public Basket getBasket(int basket_id );
+    public Basket getBasket(int basket_id , String username);
 
     public ArrayList<Basket> getAllBaskets() ;
 
-    public boolean updateBasket(int basket_id, Date confirmation_date, boolean confirmed, String username);
+    public boolean updateBasket(int basket_id, String username, Date confirmation_date, boolean confirmed);
 
     public void addBasket(Basket basket);
 
-    public void deleteBasket(int basket_id);
+    public void deleteBasket(int basket_id, String username);
 
     //Content
     public Content getContent(int basket_id, String product_name );

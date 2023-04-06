@@ -1,6 +1,8 @@
 package fr.univamu.iut.apipaniers.basket;
 
 import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.user.UserRepositoryApi;
+import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.NotFoundException;
@@ -12,13 +14,15 @@ public class BasketService {
      * Objet permettant d'accéder au dépôt où sont stockées les informations sur les livres
      */
     protected BasketManagementRepositoryInterface BasketRepo ;
+    protected UserRepositoryInterface userRepo;
 
     /**
      * Constructeur permettant d'injecter l'accès aux données
      * @param BasketRepo objet implémentant l'interface d'accès aux données
      */
-    public  BasketService( BasketManagementRepositoryInterface BasketRepo) {
+    public  BasketService(BasketManagementRepositoryInterface BasketRepo, UserRepositoryInterface userRepo) {
         this.BasketRepo = BasketRepo;
+        this.userRepo = userRepo;
     }
 
     /**
@@ -46,9 +50,9 @@ public class BasketService {
      * @param basket_id la référence du livre recherché
      * @return une chaîne de caractère contenant les informations au format JSON
      */
-    public String getBasketJSON( int basket_id ){
+    public String getBasketJSON( int basket_id, String username){
         String result = null;
-        Basket myBasket = BasketRepo.getBasket(basket_id);
+        Basket myBasket = BasketRepo.getBasket(basket_id,username);
 
         // si le livre a été trouvé
         if( myBasket != null ) {
@@ -64,21 +68,21 @@ public class BasketService {
     }
 
 
-    public boolean updateBasket(int basket_id, Basket Basket) {
-        return BasketRepo.updateBasket(basket_id, Basket.confirmation_date, Basket.confirmed, Basket.username);
+    public boolean updateBasket(int basket_id,String username, Basket Basket) {
+        return BasketRepo.updateBasket(basket_id, username, Basket.confirmation_date, Basket.confirmed);
     }
 
     public void addBasket(Basket basket) {
-        if (BasketRepo.getBasket(basket.getBasket_id()) != null) {
+        if (BasketRepo.getBasket(basket.getBasket_id(),basket.getUsername()) != null) {
             throw new RuntimeException("Basket already exists");
         }
         BasketRepo.addBasket(basket);
     }
 
-    public void deleteBasket(int basket_id) {
-        if (BasketRepo.getBasket(basket_id) == null) {
+    public void deleteBasket(int basket_id, String username) {
+        if (BasketRepo.getBasket(basket_id,username) == null) {
             throw new NotFoundException();
         }
-        BasketRepo.deleteBasket(basket_id);
+        BasketRepo.deleteBasket(basket_id,username);
     }
 }
