@@ -55,7 +55,7 @@ public class ContentManagementRepositoryMariadb implements ContentManagementRepo
             {
                 int quantity = result.getInt("quantity");
 
-                Content currentContent = new Content(basket_id, product_name,quantity);
+                selectedContent = new Content(basket_id, product_name,quantity);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

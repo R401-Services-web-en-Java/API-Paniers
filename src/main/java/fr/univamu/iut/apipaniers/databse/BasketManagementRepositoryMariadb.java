@@ -57,7 +57,7 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
                 Date confirmation_date = result.getDate("confirmation_date");
                 Boolean confirmed = result.getBoolean("confirmed");
 
-                Basket currentBasket = new Basket(basket_id, confirmation_date, confirmed,username);
+                selectedBasket = new Basket(basket_id, confirmation_date, confirmed,username);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

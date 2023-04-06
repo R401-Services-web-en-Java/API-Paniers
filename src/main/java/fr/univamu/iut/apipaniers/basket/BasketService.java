@@ -12,17 +12,17 @@ import java.util.ArrayList;
  * Basket service class
  */
 public class BasketService {
-    protected BasketManagementRepositoryInterface BasketRepo ;
+    protected BasketManagementRepositoryInterface basketRepo ;
     protected UserRepositoryInterface userRepo;
 
     /**
      * Constructor that initialize the repositories
      *
-     * @param BasketRepo
+     * @param basketRepo
      * @param userRepo
      */
-    public  BasketService(BasketManagementRepositoryInterface BasketRepo, UserRepositoryInterface userRepo) {
-        this.BasketRepo = BasketRepo;
+    public  BasketService(BasketManagementRepositoryInterface basketRepo, UserRepositoryInterface userRepo) {
+        this.basketRepo = basketRepo;
         this.userRepo = userRepo;
     }
 
@@ -31,7 +31,7 @@ public class BasketService {
      */
     public String getAllBasketsJSON(){
 
-        ArrayList<Basket> allBaskets = BasketRepo.getAllBaskets();
+        ArrayList<Basket> allBaskets = basketRepo.getAllBaskets();
 
         String result = null;
         try( Jsonb jsonb = JsonbBuilder.create()){
@@ -51,7 +51,7 @@ public class BasketService {
      */
     public String getBasketJSON( int basket_id, String username){
         String result = null;
-        Basket myBasket = BasketRepo.getBasket(basket_id,username);
+        Basket myBasket = basketRepo.getBasket(basket_id,username);
 
         if( myBasket != null ) {
 
@@ -72,17 +72,17 @@ public class BasketService {
      * @return if the basket as been updated
      */
     public boolean updateBasket(int basket_id,String username, Basket Basket) {
-        return BasketRepo.updateBasket(basket_id, username, Basket.confirmation_date, Basket.confirmed);
+        return basketRepo.updateBasket(basket_id, username, Basket.confirmation_date, Basket.confirmed);
     }
 
     /**
      * @param basket
      */
     public void addBasket(Basket basket) {
-        if (BasketRepo.getBasket(basket.getBasket_id(),basket.getUsername()) != null) {
+        if (basketRepo.getBasket(basket.getBasket_id(),basket.getUsername()) != null) {
             throw new RuntimeException("Basket already exists");
         }
-        BasketRepo.addBasket(basket);
+        basketRepo.addBasket(basket);
     }
 
     /**
@@ -90,10 +90,10 @@ public class BasketService {
      * @param username
      */
     public void deleteBasket(int basket_id, String username) {
-        if (BasketRepo.getBasket(basket_id,username) == null) {
+        if (basketRepo.getBasket(basket_id,username) == null) {
             throw new NotFoundException();
         }
-        BasketRepo.deleteBasket(basket_id,username);
+        basketRepo.deleteBasket(basket_id,username);
     }
 
     /**
@@ -104,7 +104,7 @@ public class BasketService {
         if (userRepo.getUser(username) == null) {
             throw new NotFoundException();
         }
-        ArrayList<Basket> allBaskets = BasketRepo.getBasketsByUsername(username);
+        ArrayList<Basket> allBaskets = basketRepo.getBasketsByUsername(username);
 
         String result = null;
         try( Jsonb jsonb = JsonbBuilder.create()){
