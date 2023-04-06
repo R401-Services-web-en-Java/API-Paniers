@@ -1,13 +1,16 @@
 package fr.univamu.iut.apipaniers.content;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
 import java.net.URI;
 
+@Path("/contents")
+@ApplicationScoped
 public class ContentResource {
 
     private ContentService service;
@@ -15,7 +18,7 @@ public class ContentResource {
     public ContentResource(){}
 
 
-    public @Inject ContentResource(BasketManagementRepositoryInterface contentRepo ){
+    public @Inject ContentResource(ContentManagementRepositoryInterface contentRepo ){
         this.service = new ContentService( contentRepo) ;
     }
 
@@ -39,7 +42,6 @@ public class ContentResource {
 
         String result = service.getContentJSON(content_id,product_name);
 
-        // si le livre n'a pas été trouvé
         if( result == null )
             throw new NotFoundException();
 

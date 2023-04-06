@@ -1,6 +1,6 @@
 package fr.univamu.iut.apipaniers.basket;
 
-import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryInterface;
 import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

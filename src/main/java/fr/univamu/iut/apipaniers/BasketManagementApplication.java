@@ -4,6 +4,10 @@ import fr.univamu.iut.apipaniers.basket.BasketResource;
 import fr.univamu.iut.apipaniers.basket.BasketService;
 import fr.univamu.iut.apipaniers.content.ContentResource;
 import fr.univamu.iut.apipaniers.content.ContentService;
+import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryMariadb;
+import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryMariadb;
 import fr.univamu.iut.apipaniers.user.UserRepositoryApi;
 import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -20,7 +24,7 @@ import java.util.Set;
 public class BasketManagementApplication extends Application {
 
     @Produces
-    private BasketManagementRepositoryInterface openDbConnection(){
+    private BasketManagementRepositoryInterface openBasketDbConnection(){
         BasketManagementRepositoryMariadb db = null;
 
         try{
@@ -32,8 +36,25 @@ public class BasketManagementApplication extends Application {
         return db;
     }
 
-    private void closeDbConnection(@Disposes BasketManagementRepositoryInterface basketRepo ) {
+    @Produces
+    private ContentManagementRepositoryInterface openContenttDbConnection(){
+        ContentManagementRepositoryMariadb db = null;
+
+        try{
+            db = new ContentManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
+        }
+        catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+        return db;
+    }
+
+    private void closeBasketDbConnection(@Disposes BasketManagementRepositoryInterface basketRepo ) {
         basketRepo.close();
+    }
+
+    private void closeContentDbConnection(@Disposes ContentManagementRepositoryInterface contentRepo ) {
+        contentRepo.close();
     }
 
     @Override
@@ -43,9 +64,10 @@ public class BasketManagementApplication extends Application {
         BasketService basketService = null ;
         ContentService contentService = null;
         try {
-            BasketManagementRepositoryMariadb db = new BasketManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
-            basketService = new BasketService(db,connectUserApi());
-            contentService = new ContentService(db);
+            BasketManagementRepositoryMariadb dbBasket = new BasketManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
+            ContentManagementRepositoryMariadb dbContent = new ContentManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
+            basketService = new BasketService(dbBasket,connectUserApi());
+            contentService = new ContentService(dbContent);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

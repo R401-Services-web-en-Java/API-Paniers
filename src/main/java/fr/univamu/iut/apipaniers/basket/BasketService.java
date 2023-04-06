@@ -1,7 +1,6 @@
 package fr.univamu.iut.apipaniers.basket;
 
-import fr.univamu.iut.apipaniers.BasketManagementRepositoryInterface;
-import fr.univamu.iut.apipaniers.user.UserRepositoryApi;
+import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryInterface;
 import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
