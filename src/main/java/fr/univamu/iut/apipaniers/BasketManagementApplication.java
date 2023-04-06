@@ -74,6 +74,7 @@ public class BasketManagementApplication extends Application {
 
         // Création de la ressource en lui passant paramètre les services à exécuter en fonction
         // des différents endpoints proposés (i.e. requêtes HTTP acceptées)
+        set.add(new AuthenticationFilter());
         set.add(new BasketResource(basketService));
         set.add(new ContentResource(contentService));
 

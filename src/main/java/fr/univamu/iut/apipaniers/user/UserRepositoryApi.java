@@ -46,7 +46,7 @@ public class UserRepositoryApi implements UserRepositoryInterface{
         WebTarget bookResource = client.target(url);
 
         // définition du point d'accès
-        WebTarget bookEndpoint = bookResource.path("users/"+username);
+        WebTarget bookEndpoint = bookResource.path("api/users/"+username);
 
         // ajout de l'en-tête d'autorisation et spécification du type de réponse attendu
         String token = "token"; // replace with your actual token
