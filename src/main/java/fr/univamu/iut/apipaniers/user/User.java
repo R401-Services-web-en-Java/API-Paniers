@@ -1,5 +1,9 @@
 package fr.univamu.iut.apipaniers.user;
 
+
+/**
+ * User DB class
+ */
 public class User {
     protected String username;
 
@@ -13,8 +17,19 @@ public class User {
 
     protected String role;
 
+    /**
+     * Default constructor
+     */
     public User() {}
 
+    /**
+     * @param username
+     * @param firstname
+     * @param lastname
+     * @param mail
+     * @param password
+     * @param role
+     */
     public User(String username, String firstname, String lastname, String mail, String password, String role) {
         this.username = username;
         this.firstname = firstname;

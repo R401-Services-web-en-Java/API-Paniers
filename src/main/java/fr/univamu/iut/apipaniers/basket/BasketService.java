@@ -8,16 +8,18 @@ import jakarta.ws.rs.NotFoundException;
 
 import java.util.ArrayList;
 
+/**
+ * Basket service class
+ */
 public class BasketService {
-    /**
-     * Objet permettant d'accéder au dépôt où sont stockées les informations sur les livres
-     */
     protected BasketManagementRepositoryInterface BasketRepo ;
     protected UserRepositoryInterface userRepo;
 
     /**
-     * Constructeur permettant d'injecter l'accès aux données
-     * @param BasketRepo objet implémentant l'interface d'accès aux données
+     * Constructor that initialize the repositories
+     *
+     * @param BasketRepo
+     * @param userRepo
      */
     public  BasketService(BasketManagementRepositoryInterface BasketRepo, UserRepositoryInterface userRepo) {
         this.BasketRepo = BasketRepo;
@@ -25,14 +27,12 @@ public class BasketService {
     }
 
     /**
-     * Méthode retournant les informations sur les livres au format JSON
-     * @return une chaîne de caractère contenant les informations au format JSON
+     * @return all the baskets in JSON format
      */
     public String getAllBasketsJSON(){
 
         ArrayList<Basket> allBaskets = BasketRepo.getAllBaskets();
 
-        // création du json et conversion de la liste de livres
         String result = null;
         try( Jsonb jsonb = JsonbBuilder.create()){
             result = jsonb.toJson(allBaskets);
@@ -45,18 +45,16 @@ public class BasketService {
     }
 
     /**
-     * Méthode retournant au format JSON les informations sur un livre recherché
-     * @param basket_id la référence du livre recherché
-     * @return une chaîne de caractère contenant les informations au format JSON
+     * @param basket_id
+     * @param username
+     * @return a Basket in JSON format
      */
     public String getBasketJSON( int basket_id, String username){
         String result = null;
         Basket myBasket = BasketRepo.getBasket(basket_id,username);
 
-        // si le livre a été trouvé
         if( myBasket != null ) {
 
-            // création du json et conversion du livre
             try (Jsonb jsonb = JsonbBuilder.create()) {
                 result = jsonb.toJson(myBasket);
             } catch (Exception e) {
@@ -67,10 +65,19 @@ public class BasketService {
     }
 
 
+    /**
+     * @param basket_id
+     * @param username
+     * @param Basket
+     * @return if the basket as been updated
+     */
     public boolean updateBasket(int basket_id,String username, Basket Basket) {
         return BasketRepo.updateBasket(basket_id, username, Basket.confirmation_date, Basket.confirmed);
     }
 
+    /**
+     * @param basket
+     */
     public void addBasket(Basket basket) {
         if (BasketRepo.getBasket(basket.getBasket_id(),basket.getUsername()) != null) {
             throw new RuntimeException("Basket already exists");
@@ -78,6 +85,10 @@ public class BasketService {
         BasketRepo.addBasket(basket);
     }
 
+    /**
+     * @param basket_id
+     * @param username
+     */
     public void deleteBasket(int basket_id, String username) {
         if (BasketRepo.getBasket(basket_id,username) == null) {
             throw new NotFoundException();
@@ -85,13 +96,16 @@ public class BasketService {
         BasketRepo.deleteBasket(basket_id,username);
     }
 
+    /**
+     * @param username
+     * @return the list of the baskets of a user in a JSON format
+     */
     public String getBasketsByUsernameJSON(String username) {
         if (userRepo.getUser(username) == null) {
             throw new NotFoundException();
         }
         ArrayList<Basket> allBaskets = BasketRepo.getBasketsByUsername(username);
 
-        // création du json et conversion de la liste de livres
         String result = null;
         try( Jsonb jsonb = JsonbBuilder.create()){
             result = jsonb.toJson(allBaskets);

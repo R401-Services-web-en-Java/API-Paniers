@@ -23,6 +23,9 @@ import java.util.Set;
 @ApplicationScoped
 public class BasketManagementApplication extends Application {
 
+    /**
+     * @return BasketManagementRepositoryInterface instance after opening the connection to the DB
+     */
     @Produces
     private BasketManagementRepositoryInterface openBasketDbConnection(){
         BasketManagementRepositoryMariadb db = null;
@@ -36,8 +39,11 @@ public class BasketManagementApplication extends Application {
         return db;
     }
 
+    /**
+     * @return ContentManagementRepositoryInterface instance after opening the connection to the DB
+     */
     @Produces
-    private ContentManagementRepositoryInterface openContenttDbConnection(){
+    private ContentManagementRepositoryInterface openContentDbConnection(){
         ContentManagementRepositoryMariadb db = null;
 
         try{
@@ -49,14 +55,23 @@ public class BasketManagementApplication extends Application {
         return db;
     }
 
+    /**
+     * @param basketRepo
+     */
     private void closeBasketDbConnection(@Disposes BasketManagementRepositoryInterface basketRepo ) {
         basketRepo.close();
     }
 
+    /**
+     * @param contentRepo
+     */
     private void closeContentDbConnection(@Disposes ContentManagementRepositoryInterface contentRepo ) {
         contentRepo.close();
     }
 
+    /**
+     * @return Set of all the objects needed to start the API
+     */
     @Override
     public Set<Object> getSingletons() {
         Set<Object> set = new HashSet<>();
@@ -72,8 +87,6 @@ public class BasketManagementApplication extends Application {
             System.err.println(e.getMessage());
         }
 
-        // Création de la ressource en lui passant paramètre les services à exécuter en fonction
-        // des différents endpoints proposés (i.e. requêtes HTTP acceptées)
         set.add(new AuthenticationFilter());
         set.add(new BasketResource(basketService));
         set.add(new ContentResource(contentService));
@@ -81,6 +94,9 @@ public class BasketManagementApplication extends Application {
         return set;
     }
 
+    /**
+     * @return The UserRepositoryApi instance of the User API launcher in background
+     */
     @Produces
     private UserRepositoryInterface connectUserApi(){
         return new UserRepositoryApi("http://localhost:8080/API-Produits-et-Utilisateurs-1.0-SNAPSHOT/");

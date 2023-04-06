@@ -9,25 +9,41 @@ import jakarta.ws.rs.core.Response;
 
 import java.net.URI;
 
+/**
+ * Content Resource class
+ * @access url/api/contents
+ */
 @Path("/contents")
 @ApplicationScoped
 public class ContentResource {
 
     private ContentService service;
 
+    /**
+     * Default constructor
+     */
     public ContentResource(){}
 
 
+    /**
+     * @param contentRepo
+     */
     public @Inject ContentResource(ContentManagementRepositoryInterface contentRepo ){
         this.service = new ContentService( contentRepo) ;
     }
 
 
+    /**
+     * @param service
+     */
     public ContentResource( ContentService service ){
         this.service = service;
     }
 
 
+    /**
+     * @return all the contents in JSON
+     */
     @GET
     @Produces("application/json")
     public String getAllContents() {
@@ -35,6 +51,11 @@ public class ContentResource {
     }
 
 
+    /**
+     * @param content_id
+     * @param product_name
+     * @return a content in JSON format
+     */
     @GET
     @Path("{content_id}/{product_name}")
     @Produces("application/json")
@@ -48,6 +69,10 @@ public class ContentResource {
         return result;
     }
 
+    /**
+     * @param contentJson
+     * @return if the creation is successful
+     */
     @POST
     @Consumes("application/json")
     public Response addContent(String contentJson){
@@ -62,6 +87,12 @@ public class ContentResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
+
+    /**
+     * @param content_id
+     * @param product_name
+     * @return if the deletion is successful
+     */
     @DELETE
     @Path("{content_id}/{product_name}")
     public Response deleteContent(@PathParam("content_id") int content_id,@PathParam("product_name") String product_name){
@@ -69,6 +100,12 @@ public class ContentResource {
         return Response.noContent().build();
     }
 
+    /**
+     * @param content_id
+     * @param product_name
+     * @param contentJson
+     * @return if the update is successful
+     */
     @PUT
     @Path("{content_id}/{product_name}")
     @Consumes("application/json")
