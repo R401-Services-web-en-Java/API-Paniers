@@ -2,6 +2,7 @@ package fr.univamu.iut.apipaniers.user;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -40,19 +41,29 @@ public class UserRepositoryApi implements UserRepositoryInterface{
 
         // création d'un client
         Client client = ClientBuilder.newClient();
+
         // définition de l'adresse de la ressource
-        WebTarget bookResource  = client.target(url);
+        WebTarget bookResource = client.target(url);
+
         // définition du point d'accès
         WebTarget bookEndpoint = bookResource.path("users/"+username);
+
+        // ajout de l'en-tête d'autorisation et spécification du type de réponse attendu
+        String token = "token"; // replace with your actual token
+        Invocation.Builder builder = bookEndpoint.request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token);
+
         // envoi de la requête et récupération de la réponse
-        Response response = bookEndpoint.request(MediaType.APPLICATION_JSON).get();
+        Response response = builder.get();
 
         // si le livre a bien été trouvé, conversion du JSON en User
-        if( response.getStatus() == 200)
+        if (response.getStatus() == 200) {
             myUser = response.readEntity(User.class);
+        }
 
         // fermeture de la connexion
         client.close();
+
         return myUser;
     }
 }

@@ -87,15 +87,22 @@ public class BasketResource {
     @PUT
     @Path("{basket_id}/{username}")
     @Consumes("application/json")
-    public Response updateBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username, String basketJson ){
+    public Response updateBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username, String basketJson ) {
         try {
             Basket basket = new ObjectMapper().readValue(basketJson, Basket.class);
 
-            service.updateBasket(basket_id,username,basket);
+            service.updateBasket(basket_id, username, basket);
 
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
+    }
+
+    @GET
+    @Path("{username}")
+    @Consumes("application/json")
+    public String getBasketsByUsername(@PathParam("username") String username ){
+        return service.getBasketsByUsernameJSON(username);
     }
 }

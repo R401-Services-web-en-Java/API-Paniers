@@ -85,4 +85,22 @@ public class BasketService {
         }
         BasketRepo.deleteBasket(basket_id,username);
     }
+
+    public String getBasketsByUsernameJSON(String username) {
+        if (userRepo.getUser(username) == null) {
+            throw new NotFoundException();
+        }
+        ArrayList<Basket> allBaskets = BasketRepo.getBasketsByUsername(username);
+
+        // création du json et conversion de la liste de livres
+        String result = null;
+        try( Jsonb jsonb = JsonbBuilder.create()){
+            result = jsonb.toJson(allBaskets);
+        }
+        catch (Exception e){
+            System.err.println( e.getMessage() );
+        }
+
+        return result;
+    }
 }

@@ -249,4 +249,39 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
         }
     }
 
+
+    @Override
+    public ArrayList<Basket> getBasketsByUsername(String username) {
+        ArrayList<Basket> listBaskets;
+
+        String query = "SELECT * FROM BASKET WHERE username=?";
+
+        // construction et exécution d'une requête préparée
+        try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
+            //Prepare the username given
+            ps.setString(1,username);
+
+            // exécution de la requête
+            ResultSet result = ps.executeQuery();
+
+            listBaskets = new ArrayList<>();
+
+            // récupération du premier (et seul) tuple résultat
+            while ( result.next() )
+            {
+                int basket_id = result.getInt("basket_id");
+                Date confirmation_date = result.getDate("confirmation_date");
+                Boolean confirmed = result.getBoolean("confirmed");
+                String basketUsername = result.getString("username");
+
+                // création du livre courant
+                Basket currentBasket = new Basket(basket_id, confirmation_date, confirmed,basketUsername);
+
+                listBaskets.add(currentBasket);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listBaskets;
+    }
 }

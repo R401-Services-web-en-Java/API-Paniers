@@ -60,7 +60,7 @@ public class BasketManagementApplication extends Application {
 
     @Produces
     private UserRepositoryInterface connectUserApi(){
-        return new UserRepositoryApi("http://localhost:8080/user-1.0-SNAPSHOT/api/");
+        return new UserRepositoryApi("http://localhost:8080/API-Produits-et-Utilisateurs-1.0-SNAPSHOT/");
     }
 }
 

@@ -20,6 +20,8 @@ public interface BasketManagementRepositoryInterface {
 
     public void deleteBasket(int basket_id, String username);
 
+    public ArrayList<Basket> getBasketsByUsername(String username);
+
     //Content
     public Content getContent(int basket_id, String product_name );
 
