@@ -1,6 +1,8 @@
 package fr.univamu.iut.apipaniers.content;
 
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.product.Product;
+import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.NotFoundException;
@@ -13,12 +15,15 @@ import java.util.ArrayList;
 public class ContentService {
 
     protected ContentManagementRepositoryInterface contentRepo ;
+    protected ProductRepositoryInterface productRepo;
 
     /**
      * @param contentRepo
+     * @param productRepo
      */
-    public  ContentService( ContentManagementRepositoryInterface contentRepo) {
+    public  ContentService( ContentManagementRepositoryInterface contentRepo, ProductRepositoryInterface productRepo) {
         this.contentRepo = contentRepo;
+        this.productRepo = productRepo;
     }
 
     /**
@@ -63,11 +68,24 @@ public class ContentService {
     /**
      * @param content_id
      * @param product_name
-     * @param Content
+     * @param content
      * @return if the content has been updated
      */
-    public boolean updateContent(int content_id,String product_name, Content Content) {
-        return contentRepo.updateContent(content_id, product_name, Content.quantity);
+    public boolean updateContent(int content_id,String product_name, Content content) {
+        if(productRepo.getProduct(content.getProduct_name()) ==  null){
+            throw new RuntimeException("Product doesnt exists");
+        }
+        Product newProduct = productRepo.getProduct(content.getProduct_name());
+        Content oldContent = contentRepo.getContent(content_id,product_name);
+
+        //Verify if it's needed to diminish the quantity in stock or augment it
+        if(content.getQuantity()>oldContent.getQuantity()){
+            newProduct.setQuantity_stock(newProduct.getQuantity_stock() - (content.getQuantity()-oldContent.getQuantity()));
+        }else{
+            newProduct.setQuantity_stock(newProduct.getQuantity_stock() + (oldContent.getQuantity()-content.getQuantity()));
+        }
+        productRepo.updateProduct(product_name,newProduct);
+        return contentRepo.updateContent(content_id, product_name, content.getQuantity());
     }
 
     /**
@@ -76,6 +94,9 @@ public class ContentService {
     public void addContent(Content content) {
         if (contentRepo.getContent(content.getBasket_id(),content.getProduct_name()) != null) {
             throw new RuntimeException("Content already exists");
+        }
+        if(productRepo.getProduct(content.getProduct_name()) ==  null){
+            throw new NotFoundException("Product doesnt exists");
         }
         contentRepo.addContent(content);
     }

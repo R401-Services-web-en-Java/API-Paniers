@@ -2,6 +2,7 @@ package fr.univamu.iut.apipaniers.content;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -28,8 +29,8 @@ public class ContentResource {
     /**
      * @param contentRepo
      */
-    public @Inject ContentResource(ContentManagementRepositoryInterface contentRepo ){
-        this.service = new ContentService( contentRepo) ;
+    public @Inject ContentResource(ContentManagementRepositoryInterface contentRepo , ProductRepositoryInterface productRepo){
+        this.service = new ContentService( contentRepo,productRepo) ;
     }
 
 
