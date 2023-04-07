@@ -1,4 +1,4 @@
-package fr.univamu.iut.apipaniers.user;
+package fr.univamu.iut.apipaniers.beans;
 
 
 /**

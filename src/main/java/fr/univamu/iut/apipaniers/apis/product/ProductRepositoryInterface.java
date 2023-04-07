@@ -1,6 +1,6 @@
-package fr.univamu.iut.apipaniers.product;
+package fr.univamu.iut.apipaniers.apis.product;
 
-import fr.univamu.iut.apipaniers.user.User;
+import fr.univamu.iut.apipaniers.beans.Product;
 
 public interface ProductRepositoryInterface {
     public void close();

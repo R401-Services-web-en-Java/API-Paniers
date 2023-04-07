@@ -1,8 +1,9 @@
-package fr.univamu.iut.apipaniers.content;
+package fr.univamu.iut.apipaniers.services;
 
+import fr.univamu.iut.apipaniers.beans.Content;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
-import fr.univamu.iut.apipaniers.product.Product;
-import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
+import fr.univamu.iut.apipaniers.beans.Product;
+import fr.univamu.iut.apipaniers.apis.product.ProductRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.NotFoundException;

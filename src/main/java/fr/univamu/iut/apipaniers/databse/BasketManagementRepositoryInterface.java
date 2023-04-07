@@ -1,7 +1,6 @@
 package fr.univamu.iut.apipaniers.databse;
 
-import fr.univamu.iut.apipaniers.basket.Basket;
-import fr.univamu.iut.apipaniers.content.Content;
+import fr.univamu.iut.apipaniers.beans.Basket;
 
 import java.sql.Date;
 import java.util.ArrayList;

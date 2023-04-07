@@ -1,6 +1,6 @@
 package fr.univamu.iut.apipaniers.databse;
 
-import fr.univamu.iut.apipaniers.content.Content;
+import fr.univamu.iut.apipaniers.beans.Content;
 
 import java.io.Closeable;
 import java.sql.*;

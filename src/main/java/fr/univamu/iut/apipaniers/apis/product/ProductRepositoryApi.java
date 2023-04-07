@@ -1,5 +1,6 @@
-package fr.univamu.iut.apipaniers.product;
+package fr.univamu.iut.apipaniers.apis.product;
 
+import fr.univamu.iut.apipaniers.beans.Product;
 import jakarta.ws.rs.client.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

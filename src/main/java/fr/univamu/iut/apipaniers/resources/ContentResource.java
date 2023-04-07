@@ -1,8 +1,10 @@
-package fr.univamu.iut.apipaniers.content;
+package fr.univamu.iut.apipaniers.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.univamu.iut.apipaniers.beans.Content;
+import fr.univamu.iut.apipaniers.services.ContentService;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
-import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
+import fr.univamu.iut.apipaniers.apis.product.ProductRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -82,7 +84,7 @@ public class ContentResource {
 
             service.addContent(content);
 
-            URI location = new URI("/contents/" + content.getBasket_id() + content.product_name);
+            URI location = new URI("/contents/" + content.getBasket_id() + content.getProduct_name());
             return Response.created(location).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

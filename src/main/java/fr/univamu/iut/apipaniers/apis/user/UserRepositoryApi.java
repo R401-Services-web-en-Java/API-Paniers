@@ -1,19 +1,12 @@
-package fr.univamu.iut.apipaniers.user;
+package fr.univamu.iut.apipaniers.apis.user;
 
+import fr.univamu.iut.apipaniers.beans.User;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 
 public class UserRepositoryApi implements UserRepositoryInterface{
 

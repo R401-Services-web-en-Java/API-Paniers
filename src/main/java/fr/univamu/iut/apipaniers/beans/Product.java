@@ -1,4 +1,4 @@
-package fr.univamu.iut.apipaniers.product;
+package fr.univamu.iut.apipaniers.beans;
 
 /**
  * The Products class represents a product with its properties such as name, quantity in stock, price, and unit.

@@ -1,17 +1,17 @@
 package fr.univamu.iut.apipaniers;
 
-import fr.univamu.iut.apipaniers.basket.BasketResource;
-import fr.univamu.iut.apipaniers.basket.BasketService;
-import fr.univamu.iut.apipaniers.content.ContentResource;
-import fr.univamu.iut.apipaniers.content.ContentService;
+import fr.univamu.iut.apipaniers.resources.BasketResource;
+import fr.univamu.iut.apipaniers.services.BasketService;
+import fr.univamu.iut.apipaniers.resources.ContentResource;
+import fr.univamu.iut.apipaniers.services.ContentService;
 import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryInterface;
 import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryMariadb;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryMariadb;
-import fr.univamu.iut.apipaniers.product.ProductRepositoryApi;
-import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
-import fr.univamu.iut.apipaniers.user.UserRepositoryApi;
-import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
+import fr.univamu.iut.apipaniers.apis.product.ProductRepositoryApi;
+import fr.univamu.iut.apipaniers.apis.product.ProductRepositoryInterface;
+import fr.univamu.iut.apipaniers.apis.user.UserRepositoryApi;
+import fr.univamu.iut.apipaniers.apis.user.UserRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;

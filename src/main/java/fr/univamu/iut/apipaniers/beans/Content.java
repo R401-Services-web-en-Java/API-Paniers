@@ -1,13 +1,13 @@
-package fr.univamu.iut.apipaniers.content;
+package fr.univamu.iut.apipaniers.beans;
 
 
 /**
  * Content DB equivalent
  */
 public class Content {
-    protected int basket_id;
-    protected String product_name;
-    protected int quantity;
+    private int basket_id;
+    private String product_name;
+    private int quantity;
 
     /**
      * Default constructor

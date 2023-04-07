@@ -1,7 +1,8 @@
-package fr.univamu.iut.apipaniers.basket;
+package fr.univamu.iut.apipaniers.services;
 
+import fr.univamu.iut.apipaniers.beans.Basket;
 import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryInterface;
-import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
+import fr.univamu.iut.apipaniers.apis.user.UserRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.NotFoundException;
@@ -71,14 +72,14 @@ public class BasketService {
     /**
      * @param basket_id
      * @param username
-     * @param Basket
+     * @param basket
      * @return if the basket as been updated
      */
-    public boolean updateBasket(int basket_id,String username, Basket Basket) {
+    public boolean updateBasket(int basket_id,String username, Basket basket) {
         if (basketRepo.getBasket(basket_id,username) == null) {
             throw new NotFoundException();
         }
-        return basketRepo.updateBasket(basket_id, username, Basket.confirmation_date, Basket.confirmed);
+        return basketRepo.updateBasket(basket_id, username, basket.getConfirmation_date(), basket.isConfirmed());
     }
 
     /**

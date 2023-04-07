@@ -1,4 +1,4 @@
-package fr.univamu.iut.apipaniers.basket;
+package fr.univamu.iut.apipaniers.beans;
 
 import java.sql.Date;
 
@@ -6,10 +6,10 @@ import java.sql.Date;
  * Basket Class from the DB
  */
 public class Basket {
-    protected int basket_id;
-    protected Date confirmation_date;
-    protected boolean confirmed;
-    protected String username;
+    private int basket_id;
+    private Date confirmation_date;
+    private boolean confirmed;
+    private String username;
 
     public Basket() {
     }
