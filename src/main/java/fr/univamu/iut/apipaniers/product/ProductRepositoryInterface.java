@@ -6,4 +6,6 @@ public interface ProductRepositoryInterface {
     public void close();
 
     public Product getProduct(String name) ;
+
+    public boolean updateProduct(String name, Product newProduct);
 }

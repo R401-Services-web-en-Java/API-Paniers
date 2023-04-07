@@ -50,6 +50,9 @@ public class BasketService {
      * @return a Basket in JSON format
      */
     public String getBasketJSON( int basket_id, String username){
+        if (basketRepo.getBasket(basket_id,username) == null) {
+            throw new NotFoundException();
+        }
         String result = null;
         Basket myBasket = basketRepo.getBasket(basket_id,username);
 
@@ -72,6 +75,9 @@ public class BasketService {
      * @return if the basket as been updated
      */
     public boolean updateBasket(int basket_id,String username, Basket Basket) {
+        if (basketRepo.getBasket(basket_id,username) == null) {
+            throw new NotFoundException();
+        }
         return basketRepo.updateBasket(basket_id, username, Basket.confirmation_date, Basket.confirmed);
     }
 
