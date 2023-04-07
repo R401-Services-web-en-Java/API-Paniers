@@ -8,6 +8,8 @@ import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryInterface;
 import fr.univamu.iut.apipaniers.databse.BasketManagementRepositoryMariadb;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryMariadb;
+import fr.univamu.iut.apipaniers.product.ProductRepositoryApi;
+import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
 import fr.univamu.iut.apipaniers.user.UserRepositoryApi;
 import fr.univamu.iut.apipaniers.user.UserRepositoryInterface;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -82,7 +84,7 @@ public class BasketManagementApplication extends Application {
             BasketManagementRepositoryMariadb dbBasket = new BasketManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
             ContentManagementRepositoryMariadb dbContent = new ContentManagementRepositoryMariadb("jdbc:mariadb://mysql-lucaceccarelli.alwaysdata.net/lucaceccarelli_basket", "300238_api", "MotDePasse13");
             basketService = new BasketService(dbBasket,connectUserApi());
-            contentService = new ContentService(dbContent);
+            contentService = new ContentService(dbContent,connectProductApi());
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -100,6 +102,15 @@ public class BasketManagementApplication extends Application {
     @Produces
     private UserRepositoryInterface connectUserApi(){
         return new UserRepositoryApi("http://localhost:8080/API-Produits-et-Utilisateurs-1.0-SNAPSHOT/");
+    }
+
+
+    /**
+     * @return The ProductRepositoryApi instance of the Product API launcher in background
+     */
+    @Produces
+    private ProductRepositoryInterface connectProductApi(){
+        return new ProductRepositoryApi("http://localhost:8080/API-Produits-et-Utilisateurs-1.0-SNAPSHOT/");
     }
 }
 

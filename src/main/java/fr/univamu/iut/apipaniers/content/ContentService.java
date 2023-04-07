@@ -1,6 +1,7 @@
 package fr.univamu.iut.apipaniers.content;
 
 import fr.univamu.iut.apipaniers.databse.ContentManagementRepositoryInterface;
+import fr.univamu.iut.apipaniers.product.ProductRepositoryInterface;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.NotFoundException;
@@ -13,12 +14,15 @@ import java.util.ArrayList;
 public class ContentService {
 
     protected ContentManagementRepositoryInterface contentRepo ;
+    protected ProductRepositoryInterface productRepo;
 
     /**
      * @param contentRepo
+     * @param productRepo
      */
-    public  ContentService( ContentManagementRepositoryInterface contentRepo) {
+    public  ContentService( ContentManagementRepositoryInterface contentRepo, ProductRepositoryInterface productRepo) {
         this.contentRepo = contentRepo;
+        this.productRepo = productRepo;
     }
 
     /**

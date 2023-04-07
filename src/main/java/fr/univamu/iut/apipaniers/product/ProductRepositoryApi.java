@@ -1,4 +1,4 @@
-package fr.univamu.iut.apipaniers.user;
+package fr.univamu.iut.apipaniers.product;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -7,23 +7,14 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-
-public class UserRepositoryApi implements UserRepositoryInterface{
-
+public class ProductRepositoryApi implements ProductRepositoryInterface{
     String url;
 
 
     /**
      * @param url
      */
-    public UserRepositoryApi(String url){
+    public ProductRepositoryApi(String url){
         this.url = url ;
     }
 
@@ -36,18 +27,18 @@ public class UserRepositoryApi implements UserRepositoryInterface{
     }
 
     /**
-     * @param username
-     * @return the User requested from the UserApi that has the username required
+     * @param name
+     * @return the Product requested from the ProductApi that has the name required
      */
     @Override
-    public User getUser(String username) {
-        User myUser = null;
+    public Product getProduct(String name) {
+        Product myProduct = null;
 
         Client client = ClientBuilder.newClient();
 
         WebTarget bookResource = client.target(url);
 
-        WebTarget bookEndpoint = bookResource.path("api/users/"+username);
+        WebTarget bookEndpoint = bookResource.path("api/products/"+name);
 
         String token = "token";
         Invocation.Builder builder = bookEndpoint.request(MediaType.APPLICATION_JSON)
@@ -56,11 +47,11 @@ public class UserRepositoryApi implements UserRepositoryInterface{
         Response response = builder.get();
 
         if (response.getStatus() == 200) {
-            myUser = response.readEntity(User.class);
+            myProduct = response.readEntity(Product.class);
         }
 
         client.close();
 
-        return myUser;
+        return myProduct;
     }
 }
