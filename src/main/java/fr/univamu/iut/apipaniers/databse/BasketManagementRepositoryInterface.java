@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface BasketManagementRepositoryInterface {
     public void close();
 
-    public Basket getBasket(int basket_id , String username);
+    public Basket getBasket(int basket_id);
 
     public ArrayList<Basket> getAllBaskets() ;
 
@@ -16,7 +16,7 @@ public interface BasketManagementRepositoryInterface {
 
     public void addBasket(Basket basket);
 
-    public void deleteBasket(int basket_id, String username);
+    public void deleteBasket(int basket_id);
 
     public ArrayList<Basket> getBasketsByUsername(String username);
 }

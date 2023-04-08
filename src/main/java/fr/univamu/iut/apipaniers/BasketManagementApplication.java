@@ -112,5 +112,6 @@ public class BasketManagementApplication extends Application {
     private ProductRepositoryInterface connectProductApi(){
         return new ProductRepositoryApi("http://localhost:8080/API-Produits-et-Utilisateurs-1.0-SNAPSHOT/");
     }
+    //TOOD: getAllContentsFromBasket , modif clef primaire username -> faire tous les contenus dans un basket
 }
 

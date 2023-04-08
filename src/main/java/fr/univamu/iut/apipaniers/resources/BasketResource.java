@@ -61,15 +61,14 @@ public class BasketResource {
      * Read method from the CRUD of Basket
      *
      * @param basket_id
-     * @param username
      * @return
      */
     @GET
-    @Path("{basket_id}/{username}")
+    @Path("{basket_id}")
     @Produces("application/json")
-    public String getBasket( @PathParam("basket_id") int basket_id, @PathParam("username") String username){
+    public String getBasket( @PathParam("basket_id") int basket_id){
 
-        String result = service.getBasketJSON(basket_id,username);
+        String result = service.getBasketJSON(basket_id);
 
         // si le livre n'a pas été trouvé
         if( result == null )
@@ -103,13 +102,12 @@ public class BasketResource {
      * Delete method from the CRUD of Basket
      *
      * @param basket_id
-     * @param username
      * @return api response
      */
     @DELETE
-    @Path("{basket_id}/{username}")
-    public Response deleteBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username){
-        service.deleteBasket(basket_id,username);
+    @Path("{basket_id}")
+    public Response deleteBasket(@PathParam("basket_id") int basket_id){
+        service.deleteBasket(basket_id);
         return Response.noContent().build();
     }
 
@@ -117,18 +115,17 @@ public class BasketResource {
      * Update method from the CRUD of Basket
      *
      * @param basket_id
-     * @param username
      * @param basketJson
      * @return api response
      */
     @PUT
-    @Path("{basket_id}/{username}")
+    @Path("{basket_id}")
     @Consumes("application/json")
-    public Response updateBasket(@PathParam("basket_id") int basket_id, @PathParam("username") String username, String basketJson ) {
+    public Response updateBasket(@PathParam("basket_id") int basket_id, String basketJson ) {
         try {
             Basket basket = new ObjectMapper().readValue(basketJson, Basket.class);
 
-            service.updateBasket(basket_id, username, basket);
+            service.updateBasket(basket_id, basket);
 
             return Response.ok().build();
         } catch (Exception e) {

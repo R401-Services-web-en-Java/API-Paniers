@@ -47,15 +47,14 @@ public class BasketService {
 
     /**
      * @param basket_id
-     * @param username
      * @return a Basket in JSON format
      */
-    public String getBasketJSON( int basket_id, String username){
-        if (basketRepo.getBasket(basket_id,username) == null) {
+    public String getBasketJSON( int basket_id){
+        if (basketRepo.getBasket(basket_id) == null) {
             throw new NotFoundException();
         }
         String result = null;
-        Basket myBasket = basketRepo.getBasket(basket_id,username);
+        Basket myBasket = basketRepo.getBasket(basket_id);
 
         if( myBasket != null ) {
 
@@ -71,22 +70,21 @@ public class BasketService {
 
     /**
      * @param basket_id
-     * @param username
      * @param basket
      * @return if the basket as been updated
      */
-    public boolean updateBasket(int basket_id,String username, Basket basket) {
-        if (basketRepo.getBasket(basket_id,username) == null) {
+    public boolean updateBasket(int basket_id, Basket basket) {
+        if (basketRepo.getBasket(basket_id) == null) {
             throw new NotFoundException();
         }
-        return basketRepo.updateBasket(basket_id, username, basket.getConfirmation_date(), basket.isConfirmed());
+        return basketRepo.updateBasket(basket_id, basket.getUsername(), basket.getConfirmation_date(), basket.isConfirmed());
     }
 
     /**
      * @param basket
      */
     public void addBasket(Basket basket) {
-        if (basketRepo.getBasket(basket.getBasket_id(),basket.getUsername()) != null) {
+        if (basketRepo.getBasket(basket.getBasket_id()) != null) {
             throw new RuntimeException("Basket already exists");
         }
         basketRepo.addBasket(basket);
@@ -94,13 +92,12 @@ public class BasketService {
 
     /**
      * @param basket_id
-     * @param username
      */
-    public void deleteBasket(int basket_id, String username) {
-        if (basketRepo.getBasket(basket_id,username) == null) {
+    public void deleteBasket(int basket_id) {
+        if (basketRepo.getBasket(basket_id) == null) {
             throw new NotFoundException();
         }
-        basketRepo.deleteBasket(basket_id,username);
+        basketRepo.deleteBasket(basket_id);
     }
 
     /**

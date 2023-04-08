@@ -36,24 +36,23 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
 
     /**
      * @param basket_id
-     * @param username
      * @return the basket equivalent to the id and username
      */
     @Override
-    public Basket getBasket(int basket_id, String username) {
+    public Basket getBasket(int basket_id) {
 
         Basket selectedBasket = null;
 
-        String query = "SELECT * FROM BASKET WHERE basket_id=? AND username=?";
+        String query = "SELECT * FROM BASKET WHERE basket_id=?";
 
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
             ps.setInt(1, basket_id);
-            ps.setString(2, username);
 
             ResultSet result = ps.executeQuery();
 
             if( result.next() )
             {
+                String username = result.getString("username");
                 Date confirmation_date = result.getDate("confirmation_date");
                 Boolean confirmed = result.getBoolean("confirmed");
 
@@ -105,14 +104,14 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
      */
     @Override
     public boolean updateBasket(int basket_id, String username, Date confirmation_date, boolean confirmed) {
-        String query = "UPDATE BASKET SET confirmation_date=?, confirmed=? WHERE basket_id=? AND username=?";
+        String query = "UPDATE BASKET SET confirmation_date=?, confirmed=?, username=? WHERE basket_id=?";
         int nbRowModified = 0;
 
         try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
             ps.setDate(1, confirmation_date);
             ps.setBoolean(2, confirmed);
-            ps.setInt(3, basket_id);
-            ps.setString(4, username );
+            ps.setString(3, username );
+            ps.setInt(4, basket_id);
 
             nbRowModified = ps.executeUpdate();
         } catch (SQLException e) {
@@ -143,15 +142,13 @@ public class BasketManagementRepositoryMariadb implements BasketManagementReposi
 
     /**
      * @param basket_id
-     * @param username
      */
     @Override
-    public void deleteBasket(int basket_id, String username) {
-        String query = "DELETE FROM BASKET WHERE basket_id = ? AND username=?";
+    public void deleteBasket(int basket_id) {
+        String query = "DELETE FROM BASKET WHERE basket_id = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, basket_id);
-            ps.setString(2,username);
 
             ps.executeUpdate();
         } catch (SQLException e) {
