@@ -1,28 +1,197 @@
  # Api-Paniers
  Ceci est le répertoire de l'API Paniers réalisé pour le R4.01 Architecture Logicielle fait par Ceccarelli Luca, en collaboration avec Egenscheviller Frédéric qui as fait l'Api Produits et Utilisateurs, et Saadi Nils qui a fait l'IHM.
  
- # Diagramme de cas d'utilisation
-![Cas Utilisation](CasUtilisationAPIPanier.png "Diagramme de cas d'utilisation")
+ # Diagramme de classe
  
- # Fonctionnalités implementées
+ ```mermaid
+classDiagram
+direction BT
+class AuthenticationFilter {
+  + AuthenticationFilter() 
+  - validateToken(String) void
+  + filter(ContainerRequestContext) void
+}
+class Basket {
+  + Basket() 
+  + Basket(int, Date, boolean, String) 
+  - boolean confirmed
+  - int basket_id
+  - Date confirmation_date
+  - String username
+   String username
+   int basket_id
+   boolean confirmed
+   Date confirmation_date
+}
+class BasketManagementApplication {
+  + BasketManagementApplication() 
+  - closeContentDbConnection(ContentManagementRepositoryInterface) void
+  - connectUserApi() UserRepositoryInterface
+  - closeBasketDbConnection(BasketManagementRepositoryInterface) void
+  - connectProductApi() ProductRepositoryInterface
+  - openContentDbConnection() ContentManagementRepositoryInterface
+  - openBasketDbConnection() BasketManagementRepositoryInterface
+   Set~Object~ singletons
+}
+class BasketManagementRepositoryInterface {
+<<Interface>>
+  + updateBasket(int, String, Date, boolean) boolean
+  + addBasket(Basket) void
+  + getBasketsByUsername(String) ArrayList~Basket~
+  + getBasket(int) Basket
+  + close() void
+  + deleteBasket(int) void
+   ArrayList~Basket~ allBaskets
+}
+class BasketManagementRepositoryMariadb {
+  + BasketManagementRepositoryMariadb(String, String, String) 
+  + updateBasket(int, String, Date, boolean) boolean
+  + getBasketsByUsername(String) ArrayList~Basket~
+  + close() void
+  + getBasket(int) Basket
+  + addBasket(Basket) void
+  + deleteBasket(int) void
+   ArrayList~Basket~ allBaskets
+}
+class BasketResource {
+  + BasketResource(BasketService) 
+  + BasketResource() 
+  + BasketResource(BasketManagementRepositoryInterface, UserRepositoryInterface) 
+  + updateBasket(int, String) Response
+  + getBasketsByUsername(String) String
+  + addBasket(String) Response
+  + getBasket(int) String
+  + deleteBasket(int) Response
+   String allBaskets
+}
+class BasketService {
+  + BasketService(BasketManagementRepositoryInterface, UserRepositoryInterface) 
+  + deleteBasket(int) void
+  + updateBasket(int, Basket) boolean
+  + getBasketJSON(int) String
+  + addBasket(Basket) void
+  + getBasketsByUsernameJSON(String) String
+   String allBasketsJSON
+}
+class Content {
+  + Content(int, String, int) 
+  + Content() 
+  - String product_name
+  - int quantity
+  - int basket_id
+   int quantity
+   String product_name
+   int basket_id
+}
+class ContentManagementRepositoryInterface {
+<<Interface>>
+  + close() void
+  + updateContent(int, String, int) boolean
+  + deleteContent(int, String) void
+  + getAllContentsFromBasket(int) ArrayList~Content~
+  + getContent(int, String) Content
+  + addContent(Content) void
+   ArrayList~Content~ allContents
+}
+class ContentManagementRepositoryMariadb {
+  + ContentManagementRepositoryMariadb(String, String, String) 
+  + getContent(int, String) Content
+  + getAllContentsFromBasket(int) ArrayList~Content~
+  + close() void
+  + addContent(Content) void
+  + deleteContent(int, String) void
+  + updateContent(int, String, int) boolean
+   ArrayList~Content~ allContents
+}
+class ContentResource {
+  + ContentResource(ContentManagementRepositoryInterface, ProductRepositoryInterface) 
+  + ContentResource() 
+  + ContentResource(ContentService) 
+  + updateContent(int, String, String) Response
+  + addContent(String) Response
+  + getAllContentsFromBasket(int) String
+  + deleteContent(int, String) Response
+  + getContent(int, String) String
+   String allContents
+}
+class ContentService {
+  + ContentService(ContentManagementRepositoryInterface, ProductRepositoryInterface) 
+  + getContentJSON(int, String) String
+  + deleteContent(int, String) void
+  + getAllContentsFromBasket(int) String
+  + addContent(Content) void
+  + updateContent(int, String, Content) boolean
+   String allContentsJSON
+}
+class Product {
+  + Product(String, int, float, String) 
+  + Product() 
+  # String name
+  # String unit
+  # int quantity_stock
+  # float price
+   String name
+   int quantity_stock
+   String unit
+   float price
+}
+class User {
+  + User(String, String, String, String, String, String) 
+  + User() 
+  # String password
+  # String mail
+  # String firstname
+  # String username
+  # String role
+  # String lastname
+   String firstname
+   String password
+   String username
+   String mail
+   String lastname
+   String role
+}
+
+BasketManagementApplication  ..>  AuthenticationFilter : «create»
+BasketManagementApplication  ..>  BasketManagementRepositoryMariadb : «create»
+BasketManagementApplication  ..>  BasketResource : «create»
+BasketManagementApplication  ..>  BasketService : «create»
+BasketManagementApplication  ..>  ContentManagementRepositoryMariadb : «create»
+BasketManagementApplication  ..>  ContentResource : «create»
+BasketManagementApplication  ..>  ContentService : «create»
+BasketManagementRepositoryMariadb  ..>  Basket : «create»
+BasketManagementRepositoryMariadb  ..>  BasketManagementRepositoryInterface 
+BasketResource  ..>  BasketService : «create»
+BasketResource "1" *--> "service 1" BasketService 
+BasketService "1" *--> "basketRepo 1" BasketManagementRepositoryInterface 
+ContentManagementRepositoryMariadb  ..>  Content : «create»
+ContentManagementRepositoryMariadb  ..>  ContentManagementRepositoryInterface 
+ContentResource "1" *--> "service 1" ContentService 
+ContentResource  ..>  ContentService : «create»
+ContentService "1" *--> "contentRepo 1" ContentManagementRepositoryInterface 
+```
+ 
+  # Fonctionnalités implementées
  ```bash
  //Basket
  //All baskets
  curl -H "Authorization: Bearer token" http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets
  //Get basket
- curl -H "Authorization: Bearer token" http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/1/john
+ curl -H "Authorization: Bearer token" http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/1
  //Add
  curl -H "Authorization: Bearer token" -H "Content-Type: application/json" -X POST -d '{"basket_id": 1, "confirmation_date":"2023-04-07", "confirmed":false, "username":"john"}' http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets
  //Delete
- curl -H "Authorization: Bearer token" -X DELETE http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/1/john
+ curl -H "Authorization: Bearer token" -X DELETE http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/1
  //Update
- curl -H "Authorization: Bearer token" -H "Content-Type: application/json" -X PUT -d '{"basket_id": 1, "confirmation_date":"2023-04-07", "confirmed":true, "username":"john"}' http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/1/john
+ curl -H "Authorization: Bearer token" -H "Content-Type: application/json" -X PUT -d '{"basket_id": 1, "confirmation_date":"2023-04-07", "confirmed":true, "username":"john"}' http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/1
  //Get all baskets of a user
  curl -H "Authorization: Bearer token" http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/baskets/john
 
 //Content
 //All
 curl -H "Authorization: Bearer token" -X GET http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/contents
+//All contents from a basket
+curl -H "Authorization: Bearer token" -X GET http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/contents/1
 //Get
 curl -H "Authorization: Bearer token" -X GET http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/contents/1/product1
 //Add
@@ -33,223 +202,7 @@ curl -H "Authorization: Bearer token" -X DELETE http://localhost:8080/API-Panier
 curl -H "Authorization: Bearer token" -H "Content-Type: application/json" -X PUT -d '{"basket_id":1,"product_name":"product1","quantity":20}' http://localhost:8080/API-Paniers-1.0-SNAPSHOT/api/contents/1/product1
 ```
  
- # Diagramme de classe
+ # Diagramme de cas d'utilisation
+![Cas Utilisation](CasUtilisationAPIPanier.png "Diagramme de cas d'utilisation")
  
- ```mermaid
-classDiagram
-direction BT
-class AuthenticationFilter {
-  + AuthenticationFilter() 
-  + filter(ContainerRequestContext) void
-  - validateToken(String) void
-}
-class Basket {
-  + Basket(int, Date, boolean, String) 
-  + Basket() 
-  - int basket_id
-  - Date confirmation_date
-  - String username
-  - boolean confirmed
-  + setUsername(String) void
-  + setBasket_id(int) void
-  + getConfirmation_date() Date
-  + setConfirmation_date(Date) void
-  + getUsername() String
-  + setConfirmed(boolean) void
-  + isConfirmed() boolean
-  + getBasket_id() int
-}
-class BasketManagementApplication {
-  + BasketManagementApplication() 
-  - connectUserApi() UserRepositoryInterface
-  - closeContentDbConnection(ContentManagementRepositoryInterface) void
-  - openBasketDbConnection() BasketManagementRepositoryInterface
-  - closeBasketDbConnection(BasketManagementRepositoryInterface) void
-  - openContentDbConnection() ContentManagementRepositoryInterface
-  + getSingletons() Set~Object~
-  - connectProductApi() ProductRepositoryInterface
-}
-class BasketManagementRepositoryInterface {
-<<Interface>>
-  + close() void
-  + addBasket(Basket) void
-  + getBasket(int, String) Basket
-  + getBasketsByUsername(String) ArrayList~Basket~
-  + updateBasket(int, String, Date, boolean) boolean
-  + getAllBaskets() ArrayList~Basket~
-  + deleteBasket(int, String) void
-}
-class BasketManagementRepositoryMariadb {
-  + BasketManagementRepositoryMariadb(String, String, String) 
-  # Connection dbConnection
-  + deleteBasket(int, String) void
-  + close() void
-  + updateBasket(int, String, Date, boolean) boolean
-  + addBasket(Basket) void
-  + getBasket(int, String) Basket
-  + getBasketsByUsername(String) ArrayList~Basket~
-  + getAllBaskets() ArrayList~Basket~
-}
-class BasketResource {
-  + BasketResource(BasketService) 
-  + BasketResource(BasketManagementRepositoryInterface, UserRepositoryInterface) 
-  + BasketResource() 
-  - BasketService service
-  + updateBasket(int, String, String) Response
-  + getAllBaskets() String
-  + addBasket(String) Response
-  + deleteBasket(int, String) Response
-  + getBasketsByUsername(String) String
-  + getBasket(int, String) String
-}
-class BasketService {
-  + BasketService(BasketManagementRepositoryInterface, UserRepositoryInterface) 
-  # BasketManagementRepositoryInterface basketRepo
-  # UserRepositoryInterface userRepo
-  + getAllBasketsJSON() String
-  + getBasketsByUsernameJSON(String) String
-  + deleteBasket(int, String) void
-  + updateBasket(int, String, Basket) boolean
-  + getBasketJSON(int, String) String
-  + addBasket(Basket) void
-}
-class Content {
-  + Content(int, String, int) 
-  + Content() 
-  - int basket_id
-  - int quantity
-  - String product_name
-  + getBasket_id() int
-  + getProduct_name() String
-  + setBasket_id(int) void
-  + setProduct_name(String) void
-  + getQuantity() int
-  + setQuantity(int) void
-}
-class ContentManagementRepositoryInterface {
-<<Interface>>
-  + getContent(int, String) Content
-  + deleteContent(int, String) void
-  + close() void
-  + addContent(Content) void
-  + getAllContents() ArrayList~Content~
-  + updateContent(int, String, int) boolean
-}
-class ContentManagementRepositoryMariadb {
-  + ContentManagementRepositoryMariadb(String, String, String) 
-  # Connection dbConnection
-  + updateContent(int, String, int) boolean
-  + deleteContent(int, String) void
-  + getContent(int, String) Content
-  + close() void
-  + addContent(Content) void
-  + getAllContents() ArrayList~Content~
-}
-class ContentResource {
-  + ContentResource() 
-  + ContentResource(ContentService) 
-  + ContentResource(ContentManagementRepositoryInterface, ProductRepositoryInterface) 
-  - ContentService service
-  + deleteContent(int, String) Response
-  + getAllContents() String
-  + addContent(String) Response
-  + updateContent(int, String, String) Response
-  + getContent(int, String) String
-}
-class ContentService {
-  + ContentService(ContentManagementRepositoryInterface, ProductRepositoryInterface) 
-  # ContentManagementRepositoryInterface contentRepo
-  # ProductRepositoryInterface productRepo
-  + getAllContentsJSON() String
-  + updateContent(int, String, Content) boolean
-  + addContent(Content) void
-  + deleteContent(int, String) void
-  + getContentJSON(int, String) String
-}
-class Product {
-  + Product(String, int, float, String) 
-  + Product() 
-  # int quantity_stock
-  # float price
-  # String unit
-  # String name
-  + setName(String) void
-  + setUnit(String) void
-  + getQuantity_stock() int
-  + setPrice(float) void
-  + getUnit() String
-  + getName() String
-  + setQuantity_stock(int) void
-  + getPrice() float
-}
-class ProductRepositoryApi {
-  + ProductRepositoryApi(String) 
-  ~ String url
-  + updateProduct(String, Product) boolean
-  + getProduct(String) Product
-  + close() void
-}
-class ProductRepositoryInterface {
-<<Interface>>
-  + close() void
-  + getProduct(String) Product
-  + updateProduct(String, Product) boolean
-}
-class User {
-  + User() 
-  + User(String, String, String, String, String, String) 
-  # String username
-  # String password
-  # String firstname
-  # String mail
-  # String lastname
-  # String role
-  + getLastname() String
-  + getMail() String
-  + setUsername(String) void
-  + getFirstname() String
-  + setFirstname(String) void
-  + setLastname(String) void
-  + getRole() String
-  + setRole(String) void
-  + setPassword(String) void
-  + getUsername() String
-  + setMail(String) void
-  + getPassword() String
-}
-class UserRepositoryApi {
-  + UserRepositoryApi(String) 
-  ~ String url
-  + close() void
-  + getUser(String) User
-}
-class UserRepositoryInterface {
-<<Interface>>
-  + close() void
-  + getUser(String) User
-}
-
-BasketManagementApplication  ..>  AuthenticationFilter : «create»
-BasketManagementApplication  ..>  BasketManagementRepositoryMariadb : «create»
-BasketManagementApplication  ..>  BasketResource : «create»
-BasketManagementApplication  ..>  BasketService : «create»
-BasketManagementApplication  ..>  ContentManagementRepositoryMariadb : «create»
-BasketManagementApplication  ..>  ContentResource : «create»
-BasketManagementApplication  ..>  ContentService : «create»
-BasketManagementApplication  ..>  ProductRepositoryApi : «create»
-BasketManagementApplication  ..>  UserRepositoryApi : «create»
-BasketManagementRepositoryMariadb  ..>  Basket : «create»
-BasketManagementRepositoryMariadb  ..>  BasketManagementRepositoryInterface 
-BasketResource  ..>  BasketService : «create»
-BasketResource "1" *--> "service 1" BasketService 
-BasketService "1" *--> "basketRepo 1" BasketManagementRepositoryInterface 
-BasketService "1" *--> "userRepo 1" UserRepositoryInterface 
-ContentManagementRepositoryMariadb  ..>  Content : «create»
-ContentManagementRepositoryMariadb  ..>  ContentManagementRepositoryInterface 
-ContentResource  ..>  ContentService : «create»
-ContentResource "1" *--> "service 1" ContentService 
-ContentService "1" *--> "contentRepo 1" ContentManagementRepositoryInterface 
-ContentService "1" *--> "productRepo 1" ProductRepositoryInterface 
-ProductRepositoryApi  ..>  ProductRepositoryInterface 
-UserRepositoryApi  ..>  UserRepositoryInterface 
-```
+ 
