@@ -8,6 +8,8 @@ public interface ContentManagementRepositoryInterface {
     public void close();
     public Content getContent(int basket_id, String product_name );
 
+    public ArrayList<Content> getAllContentsFromBasket(int basket_id);
+
     public ArrayList<Content> getAllContents() ;
 
     public boolean updateContent(int basket_id, String product_name, int quantity);

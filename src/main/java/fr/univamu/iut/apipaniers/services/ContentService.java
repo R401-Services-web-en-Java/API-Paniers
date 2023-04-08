@@ -112,4 +112,22 @@ public class ContentService {
         }
         contentRepo.deleteContent(basket_id,product_name);
     }
+
+    /**
+     * @return all the contents from a basket in JSON format
+     */
+    public String getAllContentsFromBasket(int basket_id){
+
+        ArrayList<Content> allContents = contentRepo.getAllContentsFromBasket(basket_id);
+
+        String result = null;
+        try( Jsonb jsonb = JsonbBuilder.create()){
+            result = jsonb.toJson(allContents);
+        }
+        catch (Exception e){
+            System.err.println( e.getMessage() );
+        }
+
+        return result;
+    }
 }

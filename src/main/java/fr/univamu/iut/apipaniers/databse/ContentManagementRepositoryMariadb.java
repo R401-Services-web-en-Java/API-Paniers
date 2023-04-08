@@ -152,4 +152,35 @@ public class ContentManagementRepositoryMariadb implements ContentManagementRepo
 
         return ( nbRowModified != 0 );
     }
+
+    /**
+     * @return an ArrayList<Content> of all the contents
+     */
+    @Override
+    public ArrayList<Content> getAllContentsFromBasket(int basket_id) {
+        ArrayList<Content> listContents ;
+
+        String query = "SELECT * FROM CONTENT WHERE basket_id=?";
+
+        try ( PreparedStatement ps = dbConnection.prepareStatement(query) ){
+            ps.setInt(1,basket_id);
+
+            ResultSet result = ps.executeQuery();
+
+            listContents = new ArrayList<>();
+
+            while ( result.next() )
+            {
+                int contentBasket_id = result.getInt("basket_id");
+                String product_name = result.getString("product_name");
+                int quantity = result.getInt("quantity");
+                Content currentContent = new Content(contentBasket_id, product_name,quantity);
+
+                listContents.add(currentContent);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listContents;
+    }
 }

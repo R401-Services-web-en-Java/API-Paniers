@@ -123,4 +123,15 @@ public class ContentResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
+
+    /**
+     * @return all the contents in JSON
+     */
+    @GET
+    @Path("{basket_id}")
+    @Produces("application/json")
+    public String getAllContentsFromBasket(@PathParam("basket_id") int basket_id) {
+
+        return service.getAllContentsFromBasket(basket_id);
+    }
 }
