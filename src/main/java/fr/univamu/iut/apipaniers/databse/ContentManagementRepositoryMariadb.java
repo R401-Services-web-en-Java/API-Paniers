@@ -117,7 +117,7 @@ public class ContentManagementRepositoryMariadb implements ContentManagementRepo
      */
     @Override
     public void deleteContent(int basket_id,String product_name) {
-        String query = "DELETE FROM BASKET WHERE basket_id = ? AND product_name = ?";
+        String query = "DELETE FROM CONTENT WHERE basket_id =? AND product_name =?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, basket_id);
